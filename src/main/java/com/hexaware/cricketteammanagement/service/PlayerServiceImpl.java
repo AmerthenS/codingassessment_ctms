@@ -82,11 +82,32 @@ public class PlayerServiceImpl implements PlayerService {
     
     
     @Override
-    public List<PlayerDTO> getPlayersByName(String playerName) {
-        List<Player> players = playerRepo.findByPlayerName(playerName);
+    public List<PlayerDTO> getPlayersByPlayerNameContainingIgnoreCase(String playerName) {
+        List<Player> players = playerRepo.findByPlayerNameContainingIgnoreCase(playerName);
         return players.stream()
                       .map(this::mapToDTO)
                       .collect(Collectors.toList());
+    }
+    
+    @Override
+    public PlayerDTO getPlayersByJerseyNumber(Integer jerseyNumber) {
+        Player player = playerRepo.findByJerseyNumber(jerseyNumber)
+            .orElseThrow(() -> new RuntimeException("Player not found with jersey number: " + jerseyNumber));
+        return mapToDTO(player);
+    }
+    
+    @Override
+    public List<PlayerDTO> getPlayersByTeamNameContainingIgnoreCase(String teamName) {
+        return playerRepo.findByTeamNameContainingIgnoreCase(teamName).stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<PlayerDTO> getPlayersByCountryNameContainingIgnoreCase(String countryName) {
+        return playerRepo.findByCountryNameContainingIgnoreCase(countryName).stream()
+            .map(this::mapToDTO)
+            .collect(Collectors.toList());
     }
 
 }

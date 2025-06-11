@@ -1,0 +1,166 @@
+<div class="container mt-4">
+  <h2>Manage Players</h2>
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+
+  
+  <form [formGroup]="playerForm" (ngSubmit)="onSubmit()" class="card p-4 mb-4">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="playerName" class="form-label">Player Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="playerName"
+          formControlName="playerName"
+          placeholder="Enter player name"
+          aria-describedby="playerNameError"
+        />
+        <div
+          *ngIf="playerForm.get('playerName')?.invalid && playerForm.get('playerName')?.touched"
+          id="playerNameError"
+          class="text-danger"
+        >
+          Player name is required (2-100 characters).
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="jerseyNumber" class="form-label">Jersey Number</label>
+        <input
+          type="number"
+          class="form-control"
+          id="jerseyNumber"
+          formControlName="jerseyNumber"
+          placeholder="Enter jersey number"
+          aria-describedby="jerseyNumberError"
+        />
+        <div
+          *ngIf="playerForm.get('jerseyNumber')?.invalid && playerForm.get('jerseyNumber')?.touched"
+          id="jerseyNumberError"
+          class="text-danger"
+        >
+          Jersey number is required (0-999).
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="role" class="form-label">Role</label>
+        <select class="form-select" id="role" formControlName="role" aria-describedby="roleError">
+          <option value="" disabled>Select role</option>
+          <option value="Batsman">Batsman</option>
+          <option value="Bowler">Bowler</option>
+          <option value="Keeper">Keeper</option>
+          <option value="All Rounder">All Rounder</option>
+        </select>
+        <div *ngIf="playerForm.get('role')?.invalid && playerForm.get('role')?.touched" id="roleError" class="text-danger">
+          Role must be Batsman, Bowler, Keeper, or All Rounder.
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="totalMatches" class="form-label">Total Matches</label>
+        <input
+          type="number"
+          class="form-control"
+          id="totalMatches"
+          formControlName="totalMatches"
+          placeholder="Enter total matches"
+          aria-describedby="totalMatchesError"
+        />
+        <div
+          *ngIf="playerForm.get('totalMatches')?.invalid && playerForm.get('totalMatches')?.touched"
+          id="totalMatchesError"
+          class="text-danger"
+        >
+          Total matches must be a non-negative number.
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="teamName" class="form-label">Team Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="teamName"
+          formControlName="teamName"
+          placeholder="Enter team name"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="countryName" class="form-label">Country</label>
+        <input
+          type="text"
+          class="form-control"
+          id="countryName"
+          formControlName="countryName"
+          placeholder="Enter country"
+        />
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="description"
+        formControlName="description"
+        rows="4"
+        placeholder="Enter description (max 500 characters)"
+      ></textarea>
+      <div
+        *ngIf="playerForm.get('description')?.invalid && playerForm.get('description')?.touched"
+        class="text-danger"
+      >
+        Description cannot exceed 500 characters.
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary" [disabled]="playerForm.invalid">
+        {{ playerForm.get('playerId')?.value ? 'Update' : 'Create' }} Player
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">Clear</button>
+    </div>
+  </form>
+
+  
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Jersey</th>
+          <th>Role</th>
+          <th>Matches</th>
+          <th>Team</th>
+          <th>Country</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let player of players">
+          <td>{{ player.playerId || 'N/A' }}</td>
+          <td>{{ player.playerName || 'N/A' }}</td>
+          <td>{{ player.jerseyNumber || 'N/A' }}</td>
+          <td>{{ player.role || 'N/A' }}</td>
+          <td>{{ player.totalMatches || 'N/A' }}</td>
+          <td>{{ player.teamName || 'N/A' }}</td>
+          <td>{{ player.countryName || 'N/A' }}</td>
+          <td>{{ player.description || 'N/A' }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm me-2" (click)="editPlayer(player)">Edit</button>
+            <button
+              class="btn btn-danger btn-sm"
+              (click)="deletePlayer(player.playerId!)"
+              [disabled]="!player.playerId"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

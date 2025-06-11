@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/players")
+@CrossOrigin(origins = "http://localhost:4200")
 public class PlayerController {
 
     @Autowired
@@ -46,7 +47,22 @@ public class PlayerController {
     
     @GetMapping("/name/{playerName}")
     public ResponseEntity<List<PlayerDTO>> getPlayersByName(@PathVariable String playerName) {
-        return ResponseEntity.ok(playerService.getPlayersByName(playerName));
+        return ResponseEntity.ok(playerService.getPlayersByPlayerNameContainingIgnoreCase(playerName));
+    }
+    
+    @GetMapping("/jersey/{jerseyNumber}")
+    public ResponseEntity<PlayerDTO> getPlayerByJerseyNumber(@PathVariable Integer jerseyNumber) {
+        return ResponseEntity.ok(playerService.getPlayersByJerseyNumber(jerseyNumber));
+    }
+
+    @GetMapping("/team/{teamName}")
+    public ResponseEntity<List<PlayerDTO>> getPlayersByTeamName(@PathVariable String teamName) {
+        return ResponseEntity.ok(playerService.getPlayersByTeamNameContainingIgnoreCase(teamName));
+    }
+
+    @GetMapping("/country/{countryName}")
+    public ResponseEntity<List<PlayerDTO>> getPlayersByCountryName(@PathVariable String countryName) {
+        return ResponseEntity.ok(playerService.getPlayersByCountryNameContainingIgnoreCase(countryName));
     }
 
 
